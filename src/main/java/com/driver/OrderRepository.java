@@ -47,7 +47,8 @@ public class OrderRepository {
     }
 
     public int getOrderCountByPartnerId(String partnerId){
-        return pairMap.get(partnerId).size();
+        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();
+        //return pairMap.get(partnerId).size();
     }
 
     public List<String> getOrdersByPartnerId(String partnerId){
@@ -71,14 +72,26 @@ public class OrderRepository {
 
     public void deleteOrderById(String id){
         orderMap.remove(id);
-        for(int i=0; i<pairMap.size(); i++) {
-            for(int j=0; j<pairMap.get(i).size(); j++) {
-                if(pairMap.get(i).get(j).equals(id)){
-                    pairMap.get(i).remove(j);
-                    return;
+        String partnerId="";
+        for(Map.Entry<String,List<String>> mp: pairMap.entrySet()){
+            for(String order: mp.getValue()){
+                if(order.equals(id)){
+                    partnerId=mp.getKey();
+                    break;
                 }
+
             }
+            if(!partnerId.equals(""))
+                break;
         }
+        List<String> orders = pairMap.get(partnerId);
+        List<String> newList=new ArrayList<>();
+
+        for(String s: orders)
+            if(!s.equals(id))
+                newList.add(s);
+
+        pairMap.put(partnerId,newList);
     }
 
     public void deletePartnerById(String id){
