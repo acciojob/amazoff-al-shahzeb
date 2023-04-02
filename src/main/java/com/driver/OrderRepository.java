@@ -130,7 +130,7 @@ public class OrderRepository {
         if(mins.length()<2) mins = "0"+mins;
         if(hrs.length()<2) hrs = "0"+hrs;
 
-        return hrs+":"+mins;
+        return (hrs+":"+mins);
     }
 
     public int getOrdersLeftAfterGivenTimeByPartnerId(String deliveryTime, String pid){
