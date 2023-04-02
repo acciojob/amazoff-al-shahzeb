@@ -81,24 +81,23 @@ public class OrderRepository {
             if(!partnerId.equals(""))
                 break;
         }
+
         if(partnerId.equals(""))
             return;
+
         List<String> orders = pairMap.get(partnerId);
-        List<String> newList=new ArrayList<>();
+        orders.remove(id);
 
-        for(String s: orders)
-            if(!s.equals(id))
-                newList.add(s);
-
-        pairMap.put(partnerId,newList);
+        pairMap.put(partnerId,orders);
     }
 
     public void deletePartnerById(String id){
         List<String> orders=pairMap.get(id);
         pairMap.remove(id);
         deliveryPartnerMap.remove(id);
-        for(String s: orders)
-            orderMap.remove(s);
+        if(orders.size()>0)
+            for(String s: orders)
+                orderMap.remove(s);
     }
 
     public String getLastDeliveryTimeByPartnerId(String pid){
