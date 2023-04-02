@@ -56,7 +56,10 @@ public class OrderRepository {
     }
 
     public List<String> getAllOrders(){
-        return (List<String>) (orderMap.keySet());
+        List<String> orders=new ArrayList<>();
+        for(String s: orderMap.keySet())
+            orders.add(s);
+        return orders;
     }
 
     public int getCountOfUnassignedOrders(){
@@ -86,18 +89,24 @@ public class OrderRepository {
             return;
 
         List<String> orders = pairMap.get(partnerId);
-        orders.remove(id);
+        List<String> newList = new ArrayList<>();
+        for(String s: orders)
+            if(!s.equals(id))
+                newList.add(s);
 
-        pairMap.put(partnerId,orders);
+        pairMap.put(partnerId,newList);
     }
 
     public void deletePartnerById(String id){
-        List<String> orders=pairMap.get(id);
-        pairMap.remove(id);
-        deliveryPartnerMap.remove(id);
-        if(orders.size()>0)
-            for(String s: orders)
+        if(pairMap.containsKey(id)) {
+            List<String> orders = pairMap.get(id);
+            pairMap.remove(id);
+            for (String s : orders)
                 orderMap.remove(s);
+        }
+        if(deliveryPartnerMap.containsKey(id))
+            deliveryPartnerMap.remove(id);
+
     }
 
     public String getLastDeliveryTimeByPartnerId(String pid){
@@ -121,10 +130,12 @@ public class OrderRepository {
         int min = Integer.parseInt(""+deliveryTime.charAt(3))*10+Integer.parseInt(""+deliveryTime.charAt(4));
         int time = hr*60+min,cnt=0;
 
-         for(String id: pairMap.get(pid)){
-             if(orderMap.get(id).getDeliveryTime()>time)
-                 cnt++;
-         }
+        if(pairMap.containsKey(pid)) {
+            for (String id : pairMap.get(pid)) {
+                if (orderMap.containsKey(id) && orderMap.get(id).getDeliveryTime() > time)
+                    cnt++;
+            }
+        }
 
         return cnt;
     }
