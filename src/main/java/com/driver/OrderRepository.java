@@ -121,9 +121,11 @@ public class OrderRepository {
         for(String time: orders){
             max=Math.max(max,(orderMap.get(time).getDeliveryTime()));
         }
-        String mins=""+max%60;
-        max-=(max%60);
-        String hrs=""+max/60;
+        int min=max%60;
+        String mins=""+min;
+        //max-=(max%60);
+        int h=max/60;
+        String hrs=""+h;
 
         if(mins.length()<2) mins = "0"+mins;
         if(hrs.length()<2) hrs = "0"+hrs;
