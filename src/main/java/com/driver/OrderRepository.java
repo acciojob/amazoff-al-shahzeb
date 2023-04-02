@@ -81,6 +81,8 @@ public class OrderRepository {
             if(!partnerId.equals(""))
                 break;
         }
+        if(partnerId.equals(""))
+            return;
         List<String> orders = pairMap.get(partnerId);
         List<String> newList=new ArrayList<>();
 
@@ -92,14 +94,27 @@ public class OrderRepository {
     }
 
     public void deletePartnerById(String id){
+        List<String> orders=pairMap.get(id);
         pairMap.remove(id);
         deliveryPartnerMap.remove(id);
+        for(String s: orders)
+            orderMap.remove(s);
     }
 
     public String getLastDeliveryTimeByPartnerId(String pid){
-        String orderId= pairMap.get(pid).get(pairMap.get(pid).size()-1);
-        int time = (orderMap.get(orderId).getDeliveryTime());
-        return String.valueOf(time);
+        List<String> orders=pairMap.get(pid);
+        int max=0;
+        for(String time: orders){
+            max=Math.max(max,(orderMap.get(time).getDeliveryTime()));
+        }
+        String mins=""+max%60;
+        max-=(max%60);
+        String hrs=""+max/60;
+
+        if(mins.length()<2) mins = "0"+mins;
+        if(hrs.length()<2) hrs = "0"+hrs;
+
+        return hrs+":"+mins;
     }
 
     public int getOrdersLeftAfterGivenTimeByPartnerId(String deliveryTime, String pid){
