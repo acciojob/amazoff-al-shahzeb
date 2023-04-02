@@ -19,12 +19,12 @@ public class OrderRepository {
     }
 
     public void addPartner(String deliveryPartner){
-        int orders=0;
-        if(pairMap.containsKey(deliveryPartner))
-            orders=pairMap.get(deliveryPartner).size();
-        DeliveryPartner deliveryPartner1=new DeliveryPartner(deliveryPartner,orders);
+//        int orders=0;
+//        if(pairMap.containsKey(deliveryPartner))
+//            orders=pairMap.get(deliveryPartner).size();
+//        DeliveryPartner deliveryPartner1=new DeliveryPartner(deliveryPartner,orders);
 
-        deliveryPartnerMap.put(deliveryPartner,deliveryPartner1);
+        deliveryPartnerMap.put(deliveryPartner,new DeliveryPartner(deliveryPartner,0));
     }
 
     public void addOrderPartnerPair(String partnerId, String orderId){
