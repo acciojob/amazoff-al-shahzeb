@@ -19,11 +19,6 @@ public class OrderRepository {
     }
 
     public void addPartner(String deliveryPartner){
-//        int orders=0;
-//        if(pairMap.containsKey(deliveryPartner))
-//            orders=pairMap.get(deliveryPartner).size();
-//        DeliveryPartner deliveryPartner1=new DeliveryPartner(deliveryPartner,orders);
-
         deliveryPartnerMap.put(deliveryPartner,new DeliveryPartner(deliveryPartner,0));
     }
 
@@ -35,6 +30,7 @@ public class OrderRepository {
 
         orderList.add(orderId);
 
+
         pairMap.put(partnerId,orderList);
     }
 
@@ -43,16 +39,24 @@ public class OrderRepository {
     }
 
     public DeliveryPartner getPartnerById(String partnerId){
-        return deliveryPartnerMap.get(partnerId);
+        if(deliveryPartnerMap.containsKey(partnerId))
+            return deliveryPartnerMap.get(partnerId);
+        return null;
     }
 
     public int getOrderCountByPartnerId(String partnerId){
-        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();
-        //return pairMap.get(partnerId).size();
+        int cnt=0;
+
+        if(deliveryPartnerMap.containsKey(partnerId))
+            cnt= deliveryPartnerMap.get(partnerId).getNumberOfOrders();
+
+        return cnt;
     }
 
     public List<String> getOrdersByPartnerId(String partnerId){
-        return pairMap.get(partnerId);
+        if(pairMap.containsKey(partnerId))
+            return pairMap.get(partnerId);
+        return new ArrayList<String>();
     }
 
     public List<String> getAllOrders(){
@@ -98,12 +102,14 @@ public class OrderRepository {
     }
 
     public void deletePartnerById(String id){
-        if(pairMap.containsKey(id)) {
-            List<String> orders = pairMap.get(id);
+//        if(pairMap.containsKey(id)) {
+//            List<String> orders = pairMap.get(id);
+//            pairMap.remove(id);
+//            for (String s : orders)
+//                orderMap.remove(s);
+//        }
+        if(pairMap.containsKey(id))
             pairMap.remove(id);
-            for (String s : orders)
-                orderMap.remove(s);
-        }
         if(deliveryPartnerMap.containsKey(id))
             deliveryPartnerMap.remove(id);
 
