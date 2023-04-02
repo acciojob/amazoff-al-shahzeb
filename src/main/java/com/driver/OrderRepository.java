@@ -62,12 +62,9 @@ public class OrderRepository {
     public int getCountOfUnassignedOrders(){
         int count=0;
         for(int i=0; i<pairMap.size(); i++){
-            for(String id : pairMap.get(i)){
-                if(!orderMap.containsKey(id))
-                    count++;
-            }
+            count+=pairMap.get(i).size();
         }
-        return count;
+        return orderMap.size()-count;
     }
 
     public void deleteOrderById(String id){
