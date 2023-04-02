@@ -11,7 +11,9 @@ import java.util.Map;
 public class OrderRepository {
     Map<String,Order> orderMap = new HashMap<>();
     Map<String,DeliveryPartner> deliveryPartnerMap = new HashMap<>();
-    Map<String, List<String>> pairMap = new HashMap<>();
+
+    Map<String,String> orderPartnerMap = new HashMap<>();  //orderId->partnerId
+    Map<String, List<String>> pairMap = new HashMap<>();  //partnerId->List<orderId>
 
 
     public void addOrder(Order order){
@@ -30,6 +32,11 @@ public class OrderRepository {
 
         orderList.add(orderId);
 
+        DeliveryPartner dp = deliveryPartnerMap.get(partnerId);
+        dp.setNumberOfOrders(orderList.size());
+        deliveryPartnerMap.put(partnerId,dp);
+
+        orderPartnerMap.put(orderId,partnerId);
 
         pairMap.put(partnerId,orderList);
     }
@@ -61,17 +68,12 @@ public class OrderRepository {
 
     public List<String> getAllOrders(){
         List<String> orders=new ArrayList<>();
-        for(String s: orderMap.keySet())
-            orders.add(s);
+        orders.addAll(orderMap.keySet());
         return orders;
     }
 
     public int getCountOfUnassignedOrders(){
-        int count=0;
-        for(int i=0; i<pairMap.size(); i++){
-            count+=pairMap.get(i).size();
-        }
-        return orderMap.size()-count;
+        return orderMap.size()-orderPartnerMap.size();
     }
 
     public void deleteOrderById(String id){
@@ -99,15 +101,14 @@ public class OrderRepository {
                 newList.add(s);
 
         pairMap.put(partnerId,newList);
+        orderPartnerMap.remove(id);
     }
 
     public void deletePartnerById(String id){
-//        if(pairMap.containsKey(id)) {
-//            List<String> orders = pairMap.get(id);
-//            pairMap.remove(id);
-//            for (String s : orders)
-//                orderMap.remove(s);
-//        }
+        for(Map.Entry<String,String> mp: orderPartnerMap.entrySet())
+            if(mp.getValue().equals(id))
+                orderPartnerMap.remove(mp.getKey());
+
         if(pairMap.containsKey(id))
             pairMap.remove(id);
         if(deliveryPartnerMap.containsKey(id))
